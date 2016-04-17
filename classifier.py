@@ -5,38 +5,33 @@ from sklearn.feature_extraction import DictVectorizer
 import codecs
 from sklearn.externals import joblib
 
-csvfile = open('train-partial.csv', 'rb')
+csvfile = open('train_small.csv', 'rb')
 #csvfiley = open('Yt.csv', 'rb')
 X=[]
 Y=[]
 
 fieldnames = ("DayOfWeek","PdDistrict","X","Y","Day","Month","Year","Hour","Minutes")
 reader = csv.DictReader( csvfile, fieldnames)
-count=0
 for row in reader:
-    if count==0:
-        count=1
-        continue
     for r in row:
         row[r]=float(row[r])
     X.append(row)
 
 
-f=codecs.open('Yt.csv',"rb","utf-16")
+f=codecs.open('Y_small.csv',"rb")
 csvread=csv.reader(f,delimiter='\t')
-csvread.next()
 for row in csvread:
     Y.append(int(row[0]))
     
 print Y[0],Y[1],Y[2],Y[3],Y[4]        
-##print len(X),len(Y)
+print len(X),len(Y)
 
 def features(d):
     return d
 vect = DictVectorizer()
 X_train = vect.fit_transform(features(d)for d in X)
 
-model = LogisticRegression(multi_class='multinomial',solver='newton-cg')
+model = LogisticRegression(tol=0.01)
 model.fit(X_train, Y)
 joblib.dump(model, 'my_model.pkl', compress=9)
 ##model= joblib.load('my_model.pkl')
