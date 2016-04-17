@@ -4,6 +4,9 @@ from sklearn import preprocessing
 from sklearn.metrics import log_loss
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 import numpy as np
 import logging
 
@@ -38,9 +41,24 @@ features = features + features2
 modelBern = BernoulliNB()
 modelBern.fit(training[features], training['crime'])
 predicted = np.array(modelBern.predict_proba(validation[features]))
+print 'Bernoulli Loss:'
 print log_loss(validation['crime'], predicted)
 
 modelLReg = LogisticRegression(C=.01)
 modelLReg.fit(training[features], training['crime'])
 predicted = np.array(modelLReg.predict_proba(validation[features]))
+print 'Logistic Regression Loss:'
 print log_loss(validation['crime'], predicted) 
+
+modelTree = DecisionTreeClassifier(max_depth=7)
+modelTree.fit(training[features], training['crime'])
+predicted = np.array(modelTree.predict_proba(validation[features]))
+print 'Decision Tree Loss:'
+print log_loss(validation['crime'], predicted)
+
+modelGauss = GaussianNB()
+modelGauss.fit(training[features], training['crime'])
+predicted = np.array(modelGauss.predict_proba(validation[features]))
+print 'Gaussian Loss:'
+print log_loss(validation['crime'], predicted)
+
