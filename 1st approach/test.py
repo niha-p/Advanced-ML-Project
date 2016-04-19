@@ -19,10 +19,10 @@ count=0
 for row in data:
     if row[1]=='Category':
         continue
-    if row[6] in categories:
+    if row[2] in categories:
         continue
     else:
-        categories[row[6]]=count
+        categories[row[2]]=count
         count=count+1
 ##for c in sorted(categories):
 ##    print c

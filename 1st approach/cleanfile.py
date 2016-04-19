@@ -15,14 +15,16 @@ def load_data(file_path):
 
 
 data = load_data('train.csv')
+do=open('dictionaries.txt','wb')
 categories={}
 districts={}
 resolutions={}
-do=open('dictionaries.txt','wb')
+descriptions={}
 days={'Monday':0,'Tuesday':1,'Wednesday':2,'Thursday':3,'Friday':4,'Saturday':5,'Sunday':6}
 countr=0
 countd=0
 count=0
+countdes=0
 for row in data:
     if row[1]=='Category':
         continue
@@ -37,6 +39,10 @@ for row in data:
     if row[5] not in resolutions:
         resolutions[row[5]]=countr
         countr=countr+1
+    if row[2] not in descriptions:
+        descriptions[row[2]]=countdes
+        countdes=countdes+1
+        
 fo=csv.writer(open('train_2.csv','wb'))
 for bits in data:
     if bits[1]=='Category':
@@ -58,6 +64,7 @@ for bits in data:
         mn=time[1]
         sec=time[2]
         bits[1]=str(categories[bits[1]])
+        bits[2]=str(descriptions[bits[2]])
         bits[3]=str(days[bits[3]])
         bits[4]=str(districts[bits[4]])
         bits[5]=str(resolutions[bits[5]])
@@ -74,4 +81,6 @@ do.write('\n\n\nDistricts\n\n')
 do.write(json.dumps(districts, indent=4, sort_keys=True))
 do.write('\n\n\nResolutions\n\n')
 do.write(json.dumps(resolutions, indent=4, sort_keys=True))
+do.write('\n\n\nDescriptions\n\n')
+do.write(json.dumps(descriptions, indent=4, sort_keys=True))
 do.close()
