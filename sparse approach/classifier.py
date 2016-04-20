@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
 from sklearn.metrics import log_loss
+from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -39,26 +40,31 @@ features = features + features2
 
 
 modelBern = BernoulliNB()
-modelBern.fit(training[features], training['crime'])
-predicted = np.array(modelBern.predict_proba(validation[features]))
+modelBern.fit(train_data[features], train_data['crime'])
+predicted = np.array(modelBern.predict_proba(train_data[features]))
 print 'Bernoulli Loss:'
-print log_loss(validation['crime'], predicted)
+print log_loss(train_data['crime'], predicted)
+prt=predicted.tolist()
+pt=[]
+for pr in prt:
+    m=max(pr)
+    pt.append(pr.index(m))
+print accuracy_score(train_data['crime'],pt)
 
-modelLReg = LogisticRegression(C=.01)
-modelLReg.fit(training[features], training['crime'])
-predicted = np.array(modelLReg.predict_proba(validation[features]))
-print 'Logistic Regression Loss:'
-print log_loss(validation['crime'], predicted) 
+##modelLReg = LogisticRegression(C=.01)
+##modelLReg.fit(training[features], training['crime'])
+##predicted = np.array(modelLReg.predict_proba(validation[features]))
+##print 'Logistic Regression Loss:'
+##print log_loss(validation['crime'], predicted) 
+##
+##modelTree = DecisionTreeClassifier(max_depth=7)
+##modelTree.fit(training[features], training['crime'])
+##predicted = np.array(modelTree.predict_proba(validation[features]))
+##print 'Decision Tree Loss:'
+##print log_loss(validation['crime'], predicted)
 
-modelTree = DecisionTreeClassifier(max_depth=7)
-modelTree.fit(training[features], training['crime'])
-predicted = np.array(modelTree.predict_proba(validation[features]))
-print 'Decision Tree Loss:'
-print log_loss(validation['crime'], predicted)
-
-modelGauss = GaussianNB()
-modelGauss.fit(training[features], training['crime'])
-predicted = np.array(modelGauss.predict_proba(validation[features]))
-print 'Gaussian Loss:'
-print log_loss(validation['crime'], predicted)
-
+##modelGauss = GaussianNB()
+##modelGauss.fit(training[features], training['crime'])
+##predicted = np.array(modelGauss.predict_proba(validation[features]))
+##print 'Gaussian Loss:'
+##print log_loss(validation['crime'], predicted)
