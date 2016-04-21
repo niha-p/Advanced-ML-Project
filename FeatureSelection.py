@@ -18,6 +18,7 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LassoCV
+from sklearn.decomposition import PCA
 
 logging.captureWarnings(True)
 
@@ -45,11 +46,15 @@ features = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 
 features2 = [x for x in range(0,24)]
 features = features + features2
 
-
+"""
 print "Variance Threshold"
 sel = VarianceThreshold(threshold=(0.90 * (1 - 0.90)))
 selector=sel.fit(training[features])
 print selector.get_support(indices=True)
+
+for i in range(0,len(features)):
+    if i in selector.get_support(indices=True):
+        print features[i]
 
 
 print "Select from Model - Logistic"
@@ -58,12 +63,20 @@ modelLReg = modelLReg.fit(training[features], training['crime'])
 model = SelectFromModel(modelLReg, prefit=True)
 print model.get_support(indices=True)
 
+for i in range(0,len(features)):
+    if i in model.get_support(indices=True):
+        print features[i]
+
 
 print "Tree Based Feature Selection"
 clf = ExtraTreesClassifier()
 clf = clf.fit(training[features], training['crime'])
 model = SelectFromModel(clf, prefit=True)
 print model.get_support(indices=True)
+
+for i in range(0,len(features)):
+    if i in model.get_support(indices=True):
+        print features[i]
 
 
 print "Lasso CV"
@@ -72,11 +85,36 @@ clf=clf.fit(training[features], training['crime'])
 model = SelectFromModel(clf, threshold=0.25,prefit=True)
 print model.get_support(indices=True)
 
+for i in range(0,len(features)):
+    if i in model.get_support(indices=True):
+        print features[i]
+
 
 print "fclassif - Select Percentile"
 selector = SelectPercentile(f_classif, percentile=50)
 selector = selector.fit(training[features], training['crime'])
 print selector.get_support(indices=True)
+
+for i in range(0,len(features)):
+    if i in selector.get_support(indices=True):
+        print features[i]
+
+"""
+print "PCA"
+
+"""
+pca = PCA(n_components='mle')
+selector=pca.fit(training[features])
+print selector.get_params()
+
+for i in range(0,len(features)):
+    if i in selector.get_support(indices=True):
+        print features[i]
+"""
+
+from matplotlib.mlab import PCA
+res = PCA(training[features])
+print "weights of input vectors: %s" % res.Wt
 
 
 """
@@ -111,6 +149,107 @@ X_new = SelectKBest(chi2, k=20)
 selector=X_new.fit_transform(training[features])
 #print selector.get_support(indices=True)
 print selector.shape
+"""
+
+
+"""
+--------OUTPUT--------
+
+Variance Threshold
+[ 0  1  2  3  4  5  6  7 10 11 14 18]
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday
+BAYVIEW
+MISSION
+NORTHERN
+SOUTHERN
+Y
+Select from Model - Logistic
+[ 7  8  9 10 12 13 16 18 19 20 21 22 23 24 25 26 27 28 29 30 31 41 42]
+BAYVIEW
+CENTRAL
+INGLESIDE
+MISSION
+PARK
+RICHMOND
+TENDERLOIN
+Y
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+22
+23
+Tree Based Feature Selection
+[17 18]
+X
+Y
+Lasso CV
+[ 7  8  9 11 13 14 15 16 17 20 23 24 25 26 30 31 32 33 34 37 39 40 41 42]
+BAYVIEW
+CENTRAL
+INGLESIDE
+NORTHERN
+RICHMOND
+SOUTHERN
+TARAVAL
+TENDERLOIN
+X
+1
+4
+5
+6
+7
+11
+12
+13
+14
+15
+18
+20
+21
+22
+23
+fclassif - Select Percentile
+[ 7  8  9 10 11 12 13 14 15 16 17 19 20 21 22 24 25 26 27 31 41]
+BAYVIEW
+CENTRAL
+INGLESIDE
+MISSION
+NORTHERN
+PARK
+RICHMOND
+SOUTHERN
+TARAVAL
+TENDERLOIN
+X
+0
+1
+2
+3
+5
+6
+7
+8
+12
+22
+
+
+
 """
 
 
