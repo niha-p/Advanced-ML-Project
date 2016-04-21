@@ -2,15 +2,16 @@ import pandas as pd
 from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
 from sklearn.metrics import log_loss
-from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+from sklearn.svm import SVC
 import numpy as np
 import logging
-
+import time
 
 logging.captureWarnings(True)
 
@@ -31,40 +32,59 @@ train_data['X']=train_X_Y['X']
 
 training, validation = train_test_split(train_data, train_size=.60)
 
+
 features = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 
 'BAYVIEW', 'CENTRAL', 'INGLESIDE', 'MISSION','NORTHERN', 'PARK', 'RICHMOND', 'SOUTHERN',
-'TARAVAL', 'TENDERLOIN','X','Y']
+'TARAVAL', 'TENDERLOIN',
+'X','Y']
  
 features2 = [x for x in range(0,24)]
 features = features + features2
 
 
+t1=time.time()
 modelBern = BernoulliNB()
-modelBern.fit(train_data[features], train_data['crime'])
-predicted = np.array(modelBern.predict_proba(train_data[features]))
-print 'Bernoulli Loss:'
-print log_loss(train_data['crime'], predicted)
-prt=predicted.tolist()
-pt=[]
-for pr in prt:
-    m=max(pr)
-    pt.append(pr.index(m))
-print accuracy_score(train_data['crime'],pt)
+modelBern.fit(training[features], training['crime'])
+t2=time.time()
+predicted = np.array(modelBern.predict_proba(validation[features]))
+print 'Bernoulli Loss and Time:'
+print log_loss(validation['crime'], predicted),(t2-t1)
 
-##modelLReg = LogisticRegression(C=.01)
-##modelLReg.fit(training[features], training['crime'])
-##predicted = np.array(modelLReg.predict_proba(validation[features]))
-##print 'Logistic Regression Loss:'
-##print log_loss(validation['crime'], predicted) 
+t1=time.time()
+modelLReg = LogisticRegression(C=.01)
+modelLReg.fit(training[features], training['crime'])
+t2=time.time()
+predicted = np.array(modelLReg.predict_proba(validation[features]))
+print 'Logistic Regression Loss and Time:'
+print log_loss(validation['crime'], predicted),(t2-t1)
+
+t1=time.time()
+modelTree = DecisionTreeClassifier(max_depth=7)
+modelTree.fit(training[features], training['crime'])
+t2=time.time()
+predicted = np.array(modelTree.predict_proba(validation[features]))
+print 'Decision Tree Loss and Time:'
+print log_loss(validation['crime'], predicted),(t2-t1)
+
 ##
-##modelTree = DecisionTreeClassifier(max_depth=7)
-##modelTree.fit(training[features], training['crime'])
-##predicted = np.array(modelTree.predict_proba(validation[features]))
-##print 'Decision Tree Loss:'
+##modelSVC = SVC(C=10000)
+##modelSVC.fit(training[features], training['crime'])
+##predicted = np.array(modelSVC.predict_proba(validation[features]))
+##print 'SVC Loss:'
 ##print log_loss(validation['crime'], predicted)
 
-##modelGauss = GaussianNB()
-##modelGauss.fit(training[features], training['crime'])
-##predicted = np.array(modelGauss.predict_proba(validation[features]))
-##print 'Gaussian Loss:'
+t1=time.time()
+modelGauss = GaussianNB()
+modelGauss.fit(training[features], training['crime'])
+t2=time.time()
+predicted = np.array(modelGauss.predict_proba(validation[features]))
+print 'Gaussian Loss and Time:'
+print log_loss(validation['crime'], predicted),(t2-t1)
+
+##modelKnn = KNeighborsClassifier(n_neighbors=3000)
+##modelKnn.fit(training[features], training['crime'])
+##predicted = np.array(modelKnn.predict_proba(validation[features]))
+##print 'KNN Loss:'
 ##print log_loss(validation['crime'], predicted)
+
+
