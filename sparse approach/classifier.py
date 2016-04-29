@@ -66,13 +66,6 @@ predicted = np.array(modelTree.predict_proba(validation[features]))
 print 'Decision Tree Loss and Time:'
 print log_loss(validation['crime'], predicted),(t2-t1)
 
-
-##modelSVC = SVC(C=10000)
-##modelSVC.fit(training[features], training['crime'])
-##predicted = np.array(modelSVC.predict_proba(validation[features]))
-##print 'SVC Loss:'
-##print log_loss(validation['crime'], predicted)
-
 t1=time.time()
 modelGauss = GaussianNB()
 modelGauss.fit(training[features], training['crime'])
@@ -81,10 +74,14 @@ predicted = np.array(modelGauss.predict_proba(validation[features]))
 print 'Gaussian Loss and Time:'
 print log_loss(validation['crime'], predicted),(t2-t1)
 
-##modelKnn = KNeighborsClassifier(n_neighbors=3000)
+##modelKnn = KNeighborsClassifier(n_neighbors=100, weights='uniform', algorithm='auto', leaf_size=100, p=10, metric='minkowski')
 ##modelKnn.fit(training[features], training['crime'])
 ##predicted = np.array(modelKnn.predict_proba(validation[features]))
 ##print 'KNN Loss:'
 ##print log_loss(validation['crime'], predicted)
 
-
+##modelSVC = SVC(C=10000)
+##modelSVC.fit(training[features], training['crime'])
+##predicted = np.array(modelSVC.predict_proba(validation[features]))
+##print 'SVC Loss:'
+##print log_loss(validation['crime'], predicted)
