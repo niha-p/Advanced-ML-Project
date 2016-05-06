@@ -8,6 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import GradientBoostingClassifier 
 from sklearn.svm import SVC
 import numpy as np
 import logging
@@ -42,37 +43,46 @@ features2 = [x for x in range(0,24)]
 features = features + features2
 
 
-t1=time.time()
-modelBern = BernoulliNB()
-modelBern.fit(training[features], training['crime'])
-t2=time.time()
-predicted = np.array(modelBern.predict_proba(validation[features]))
-print 'Bernoulli Loss and Time:'
-print log_loss(validation['crime'], predicted),(t2-t1)
+##t1=time.time()
+##modelBern = BernoulliNB()
+##modelBern.fit(training[features], training['crime'])
+##t2=time.time()
+##predicted = np.array(modelBern.predict_proba(validation[features]))
+##print 'Bernoulli Loss and Time:'
+##print log_loss(validation['crime'], predicted),(t2-t1)
+##
+##t1=time.time()
+##modelLReg = LogisticRegression(C=.01)
+##modelLReg.fit(training[features], training['crime'])
+##t2=time.time()
+##predicted = np.array(modelLReg.predict_proba(validation[features]))
+##print 'Logistic Regression Loss and Time:'
+##print log_loss(validation['crime'], predicted),(t2-t1)
+##
+##t1=time.time()
+##modelTree = DecisionTreeClassifier(max_depth=7)
+##modelTree.fit(training[features], training['crime'])
+##t2=time.time()
+##predicted = np.array(modelTree.predict_proba(validation[features]))
+##print 'Decision Tree Loss and Time:'
+##print log_loss(validation['crime'], predicted),(t2-t1)
+
+##t1=time.time()
+##modelGauss = GaussianNB()
+##modelGauss.fit(training[features], training['crime'])
+##t2=time.time()
+##predicted = np.array(modelGauss.predict_proba(validation[features]))
+##print 'Gaussian Loss and Time:'
+##print log_loss(validation['crime'], predicted),(t2-t1)
 
 t1=time.time()
-modelLReg = LogisticRegression(C=.01)
-modelLReg.fit(training[features], training['crime'])
+modelGr = GradientBoostingClassifier()
+modelGr.fit(training[features], training['crime'])
 t2=time.time()
-predicted = np.array(modelLReg.predict_proba(validation[features]))
-print 'Logistic Regression Loss and Time:'
+predicted = np.array(modelGr.predict_proba(validation[features]))
+print 'Gradient Boosted Loss and Time:'
 print log_loss(validation['crime'], predicted),(t2-t1)
 
-t1=time.time()
-modelTree = DecisionTreeClassifier(max_depth=7)
-modelTree.fit(training[features], training['crime'])
-t2=time.time()
-predicted = np.array(modelTree.predict_proba(validation[features]))
-print 'Decision Tree Loss and Time:'
-print log_loss(validation['crime'], predicted),(t2-t1)
-
-t1=time.time()
-modelGauss = GaussianNB()
-modelGauss.fit(training[features], training['crime'])
-t2=time.time()
-predicted = np.array(modelGauss.predict_proba(validation[features]))
-print 'Gaussian Loss and Time:'
-print log_loss(validation['crime'], predicted),(t2-t1)
 
 ##modelKnn = KNeighborsClassifier(n_neighbors=100, weights='uniform', algorithm='auto', leaf_size=100, p=10, metric='minkowski')
 ##modelKnn.fit(training[features], training['crime'])
@@ -80,8 +90,13 @@ print log_loss(validation['crime'], predicted),(t2-t1)
 ##print 'KNN Loss:'
 ##print log_loss(validation['crime'], predicted)
 
-##modelSVC = SVC(C=10000)
+##t1=time.time()
+##modelSVC = SVC(max_iter=1000)
 ##modelSVC.fit(training[features], training['crime'])
+##t2=time.time()
 ##predicted = np.array(modelSVC.predict_proba(validation[features]))
-##print 'SVC Loss:'
-##print log_loss(validation['crime'], predicted)
+##print 'SVC Loss and Time:'
+##print log_loss(validation['crime'], predicted),(t2-t1)
+
+
+
